@@ -9,7 +9,7 @@ banco de dados.
 
 * Procurei utilizar uma arquitetura limpa separando as responsabilidades das camadas de Aplicação, Domínio e Infraestrutura.
 * Empreguei os princípios SOLID, para criar um projeto orientado a objetos que preza por código limpo e desaclopado.
-* Utilizei Injeção de dependência tornando o código memos aclopado facilitando também o criação de testes.
+* Utilizei Injeção de dependência tornando o código menos aclopado facilitando também o criação de testes.
 
 # Bibliotecas e Frameworks Utilizados
 
