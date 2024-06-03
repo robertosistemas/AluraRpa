@@ -20,14 +20,14 @@ ManagerConsole.BringConsoleToFront();
 
 Console.WriteLine("Digite algo para pesquisar ou somente ENTER para consultar RPA");
 
-var textoAlternativo = Console.ReadLine();
+var textoParaProcurar = Console.ReadLine();
 
-if (string.IsNullOrWhiteSpace(textoAlternativo))
-    aluraService.Consulta("RPA");
-else
-    aluraService.Consulta(textoAlternativo);
+if (string.IsNullOrWhiteSpace(textoParaProcurar))
+    textoParaProcurar = "RPA";
 
-Console.WriteLine($"As informações de consulta do texto: {} informado foram salvas no banco de dados SqlServer :Alura-6d509556.");
+aluraService.Consulta(textoParaProcurar.Trim());
+
+Console.WriteLine($"As informações de consulta do texto: {textoParaProcurar} informado foram salvas no banco de dados SqlServer :Alura-6d509556.");
 Console.WriteLine("Pressione qualuer tecla para finalizar");
 
 Console.ReadKey();
