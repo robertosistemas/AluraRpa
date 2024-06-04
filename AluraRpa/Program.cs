@@ -14,20 +14,24 @@ using var aluraDbContext = services.GetRequiredService<AluraDbContext>();
 
 aluraDbContext.Database.Migrate();
 
-var aluraService = services.GetRequiredService<IAluraService>();
-
 ManagerConsole.BringConsoleToFront();
 
-Console.WriteLine("Digite algo para pesquisar ou somente ENTER para consultar RPA");
+Console.WriteLine("Digite algo e pressione ENTER para pesquisar ou somente ENTER para consultar 'RPA'");
 
 var textoParaProcurar = Console.ReadLine();
 
 if (string.IsNullOrWhiteSpace(textoParaProcurar))
     textoParaProcurar = "RPA";
 
+var aluraService = services.GetRequiredService<IAluraService>();
+
 aluraService.Consulta(textoParaProcurar.Trim());
 
+ManagerConsole.BringConsoleToFront();
+
+Console.WriteLine();
 Console.WriteLine($"As informações de consulta do texto: {textoParaProcurar} informado foram salvas no banco de dados SqlServer :Alura-6d509556.");
+Console.WriteLine();
 Console.WriteLine("Pressione qualuer tecla para finalizar");
 
 Console.ReadKey();
