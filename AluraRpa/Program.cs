@@ -3,6 +3,7 @@ using AluraRpa.Infra.Configurations;
 using AluraRpa.Infra.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using OpenQA.Selenium;
 
 ConfigureLog.InitializeLog();
 
@@ -26,6 +27,10 @@ if (string.IsNullOrWhiteSpace(textoParaProcurar))
 var aluraService = services.GetRequiredService<IAluraService>();
 
 aluraService.Consulta(textoParaProcurar.Trim());
+
+var driver = services.GetRequiredService<IWebDriver>();
+
+driver.Quit();
 
 ManagerConsole.BringConsoleToFront();
 
