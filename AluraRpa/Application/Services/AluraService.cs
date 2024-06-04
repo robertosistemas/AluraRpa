@@ -77,6 +77,8 @@ namespace AluraRpa.Application.Services
                 _aluraDbContext.Consulta.Add(cursoModel);
                 _aluraDbContext.SaveChanges();
             }
+
+            _driver.Quit();
         }
     }
 }
