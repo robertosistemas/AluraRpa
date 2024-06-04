@@ -1,9 +1,7 @@
-﻿using AluraRpa.Domain.Models;
-using AluraRpa.Domain.Services;
+﻿using AluraRpa.Domain.Services;
 using AluraRpa.Infra.Configurations;
 using AluraRpa.Infra.Database;
 using AluraRpa.Infra.Database.Models;
-using FluentValidation;
 using OpenQA.Selenium;
 using Serilog;
 
@@ -15,15 +13,13 @@ namespace AluraRpa.Application.Services
         private readonly IWebDriver _driver;
         private readonly AluraDbContext _aluraDbContext;
         private readonly IConsultaService _consultaService;
-        private readonly IValidator<Consulta> _validator;
 
-        public AluraService(IAppSettings appSettings, IWebDriver driver, AluraDbContext aluraDbContext, IConsultaService consultaService, IValidator<Consulta> validator)
+        public AluraService(IAppSettings appSettings, IWebDriver driver, AluraDbContext aluraDbContext, IConsultaService consultaService)
         {
             _appSettings = appSettings;
             _driver = driver;
             _aluraDbContext = aluraDbContext;
             _consultaService = consultaService;
-            _validator = validator;
         }
 
         private List<string> GetLinks(string textToSearch)
@@ -65,20 +61,10 @@ namespace AluraRpa.Application.Services
                     continue;
                 }
 
-                var validationResult = _validator.Validate(result.Value);
-
-                if (!validationResult.IsValid)
-                {
-                    Log.Error("O preenchimento dos campos então inválidos: {erros}", validationResult.ToString(Environment.NewLine));
-                    continue;
-                }
-
-                var cursoModel = ConsultaModel.MapFrom(result.Value!);
+                var cursoModel = ConsultaModel.MapFrom(result.SuccessValue!);
                 _aluraDbContext.Consulta.Add(cursoModel);
                 _aluraDbContext.SaveChanges();
             }
-
-            _driver.Quit();
         }
     }
 }

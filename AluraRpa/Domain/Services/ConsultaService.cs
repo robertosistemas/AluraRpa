@@ -1,6 +1,7 @@
 ﻿using AluraRpa.Domain.Exceptions;
 using AluraRpa.Domain.Models;
 using AluraRpa.Infra.Configurations;
+using FluentValidation;
 using OpenQA.Selenium;
 using System.Text;
 
@@ -10,14 +11,16 @@ namespace AluraRpa.Domain.Services
     {
         private readonly IAppSettings _appSettings;
         private readonly IWebDriver _driver;
+        private readonly IValidator<Consulta> _validator;
 
-        public ConsultaService(IAppSettings appSettings, IWebDriver driver)
+        public ConsultaService(IAppSettings appSettings, IWebDriver driver, IValidator<Consulta> validator)
         {
             _appSettings = appSettings;
             _driver = driver;
+            _validator = validator;
         }
 
-        public Result<Consulta, DomainException> GetConsulta(string url)
+        public Result<Consulta, Exception> GetConsulta(string url)
         {
             try
             {
@@ -36,6 +39,13 @@ namespace AluraRpa.Domain.Services
                 curso.CargaHoraria = elementCargaHoraria.Text;
 
                 curso.Descricao = GetDescricao();
+
+                var validationResult = _validator.Validate(curso);
+
+                if (!validationResult.IsValid)
+                {
+                    return new ValidationException($"O preenchimento dos campos então inválidos!", validationResult.Errors);
+                }
 
                 return curso;
             }

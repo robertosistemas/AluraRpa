@@ -1,10 +1,9 @@
-﻿using AluraRpa.Domain.Exceptions;
-using AluraRpa.Domain.Models;
+﻿using AluraRpa.Domain.Models;
 
 namespace AluraRpa.Domain.Services
 {
     public interface IConsultaService
     {
-        Result<Consulta, DomainException> GetConsulta(string url);
+        Result<Consulta, Exception> GetConsulta(string url);
     }
 }
