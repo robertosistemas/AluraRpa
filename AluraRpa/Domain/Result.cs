@@ -1,46 +1,53 @@
 ﻿namespace AluraRpa.Domain
 {
-    public class Result<TValue, TError>
+    public class Result<TSuccessTypeResult, TErrorTypeResult>
     {
-        public TValue Value { get; private set; }
+        public TSuccessTypeResult SuccessValue { get; private set; }
 
-        public TError ErrorValue { get; private set; }
+        public TErrorTypeResult ErrorValue { get; private set; }
 
         public bool IsOk { get; private set; }
 
-        private Result(TValue value, TError errorValue, bool success)
+        private Result(TSuccessTypeResult successValue)
         {
-            this.Value = value;
+            this.SuccessValue = successValue;
+            this.ErrorValue = default!;
+            this.IsOk = true;
+        }
+
+        private Result(TErrorTypeResult errorValue)
+        {
+            this.SuccessValue = default!;
             this.ErrorValue = errorValue;
-            this.IsOk = success;
+            this.IsOk = false;
         }
 
-        public static Result<TValueResult, TErrorResult> Ok<TValueResult, TErrorResult>(TValueResult valueResult)
+        public static Result<TSuccessType, TErrorType> Ok<TSuccessType, TErrorType>(TSuccessType valueResult)
         {
-            return new Result<TValueResult, TErrorResult>(valueResult, default!, true);
+            return new Result<TSuccessType, TErrorType>(valueResult);
         }
 
-        public static Result<TValueResult, TErrorResult> Err<TValueResult, TErrorResult>(TErrorResult errorResult)
+        public static Result<TSuccessType, TErrorType> Err<TSuccessType, TErrorType>(TErrorType errorResult)
         {
-            return new Result<TValueResult, TErrorResult>(default!, errorResult, false);
+            return new Result<TSuccessType, TErrorType>(errorResult);
         }
 
-        public static implicit operator Result<TValue, TError>(TValue value)
+        public static implicit operator Result<TSuccessTypeResult, TErrorTypeResult>(TSuccessTypeResult successValue)
         {
-            return new Result<TValue, TError>(value, default!, true);
+            return new Result<TSuccessTypeResult, TErrorTypeResult>(successValue);
         }
 
-        public static implicit operator Result<TValue, TError>(TError valueError)
+        public static implicit operator Result<TSuccessTypeResult, TErrorTypeResult>(TErrorTypeResult errorValue)
         {
-            return new Result<TValue, TError>(default!, valueError, false);
+            return new Result<TSuccessTypeResult, TErrorTypeResult>(errorValue);
         }
 
-        public TResult Match<TResult>(Func<TValue, TResult> success, Func<TError, TResult> failure)
+        public TResult Match<TResult>(Func<TSuccessTypeResult, TResult> successFunc, Func<TErrorTypeResult, TResult> errorFunc)
         {
             if (IsOk)
-                return success(this.Value);
+                return successFunc(this.SuccessValue);
             else
-                return failure(this.ErrorValue);
+                return errorFunc(this.ErrorValue);
         }
     }
 }
